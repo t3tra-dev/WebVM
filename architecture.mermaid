@@ -1,0 +1,156 @@
+---
+config:
+  layout: fixed
+---
+flowchart TB
+ subgraph subGraph0["HTML Entry Point"]
+        HTML@{ label: "index.html<br>&lt;script type='module' src='boot.js'&gt;" }
+  end
+ subgraph subGraph1["Device Drivers"]
+        FS_DRV["fs.ts<br>IndexedDB + OPFS"]
+        NET_DRV["net.ts<br>WebTransport/WebSocket"]
+        AUDIO_DRV["audio.ts<br>AudioWorklet"]
+        HID_DRV["hid.ts<br>WebHID/WebUSB"]
+  end
+ subgraph subGraph2["JavaScript Layer"]
+        BOOT["boot.js<br>WebAssembly.instantiateStreaming()"]
+        SYSLIB["syslib.ts<br>Device Driver Layer"]
+        subGraph1
+  end
+ subgraph subGraph3["Storage Layer"]
+        IDB["IndexedDB<br>(persistent, 50%/8TiB)"]
+        OPFS["OPFS<br>(experimental flag)"]
+        CACHE["Cache API"]
+  end
+ subgraph subGraph4["Web APIs"]
+        SAB["SharedArrayBuffer<br>(COOP/COEP required)"]
+        WORKERS["Web Workers<br>(Dedicated)"]
+        CANVAS["Canvas API<br>OffscreenCanvas"]
+        WEBGL["WebGL 2.0"]
+        WEBTRANSPORT["WebTransport<br>(HTTP/3)"]
+        AUDIOWORKLET["AudioWorklet"]
+        WEBHID["WebHID/WebUSB<br>(HTTPS required)"]
+  end
+ subgraph subGraph5["Browser Environment (Firefox 138+)"]
+        subGraph0
+        subGraph2
+        subGraph3
+        subGraph4
+  end
+ subgraph subGraph6["Memory Model"]
+        MEM0["linear mem0<br>musl heap/stack<br>--import-memory --shared"]
+        GCHEAP["gc-heap<br>ref struct objects<br>-fwasm-experimental-gc"]
+        MEM1["mem1<br>VGA buffer (64MiB)<br>GUI shared memory"]
+  end
+ subgraph subGraph7["Kernel (C + Wasm GC)"]
+        KERNEL["kernel.wasm<br>POSIX API (~220 calls)"]
+        SYSCALL["System Call Dispatcher<br>WIT bindings"]
+        SCHED["Scheduler<br>pthread + futex"]
+        SIGNAL["Signal Handler<br>Atomics.notify"]
+  end
+ subgraph subGraph8["WebAssembly Runtime"]
+        subGraph6
+        subGraph7
+  end
+ subgraph subGraph9["Virtual File System"]
+        VFS["VFS Layer"]
+        RAMFS["/ (ramfs)<br>root filesystem"]
+        PKGFS["/usr (pkgfs)<br>read-only squashfs<br>*.squash.wasm"]
+        IDBFS["/home (idbfs)<br>IndexedDB blocks (4KiB)"]
+        MEMFS["/tmp (memfs)<br>temporary storage"]
+  end
+ subgraph subGraph10["Network Stack"]
+        SOCKET["Socket API<br>AF_INET/SOCK_STREAM"]
+        DNS["Name Resolution<br>dns.google/resolve"]
+        TRANSPORT["Transport Layer<br>WebTransport + fallback"]
+  end
+ subgraph subGraph11["Audio Subsystem"]
+        RING["Ring Buffer<br>SAB 128 samples"]
+        WORKLET["AudioWorklet<br>Atomics.waitAsync()"]
+        HW_AUDIO["Hardware Audio"]
+  end
+ subgraph subGraph12["Window Manager"]
+        WM@{ label: "Window Manager<br>&lt;div class='window'&gt;" }
+        FOCUS["Focus Management<br>click → focus(pid)"]
+  end
+ subgraph Rendering["Rendering"]
+        CANVAS_WIN["Canvas per Window<br>640x480 default"]
+        OFFSCREEN["OffscreenCanvas<br>WebGL 2"]
+        SPRITE["Sprite Blitting<br>&lt;img&gt;/&lt;video&gt; fast path"]
+  end
+ subgraph subGraph14["GUI System"]
+        subGraph12
+        Rendering
+  end
+ subgraph subGraph15["IPC & Communication"]
+        PIPE["Pipes<br>MessageChannel (2 ports)"]
+        UDS["UNIX Domain Socket<br>SAB + futex"]
+        MSG["Message Queue<br>postMessage()"]
+  end
+ subgraph subGraph16["Build & Debug Tools"]
+        BUILD["Build Chain<br>clang --target=wasm32<br>wit-bindgen c"]
+        TEST["Unit Testing<br>wasmtime --preview2"]
+        DEBUG["Browser Debug<br>about:debugging#workers"]
+  end
+    HTML --> BOOT
+    BOOT --> KERNEL
+    KERNEL --> SYSCALL & MEM0 & GCHEAP & MEM1 & SCHED & VFS & SOCKET & RING & WM & PIPE & UDS
+    SYSCALL --> SYSLIB
+    SYSLIB --> FS_DRV & NET_DRV & AUDIO_DRV & HID_DRV
+    FS_DRV --> IDB & OPFS
+    NET_DRV --> WEBTRANSPORT
+    AUDIO_DRV --> AUDIOWORKLET
+    HID_DRV --> WEBHID
+    SCHED --> WORKERS & SAB
+    VFS --> RAMFS & PKGFS & IDBFS & MEMFS
+    IDBFS --> IDB
+    SOCKET --> TRANSPORT & DNS
+    TRANSPORT --> WEBTRANSPORT
+    RING --> WORKLET
+    WORKLET --> HW_AUDIO
+    WM --> CANVAS_WIN & SPRITE
+    CANVAS_WIN --> OFFSCREEN
+    OFFSCREEN --> WEBGL
+    PIPE --> MSG
+    UDS --> SAB
+    MEM1 --> CANVAS_WIN
+    HTML@{ shape: rect}
+    WM@{ shape: rect}
+     HTML:::browser
+     FS_DRV:::browser
+     NET_DRV:::browser
+     AUDIO_DRV:::browser
+     HID_DRV:::browser
+     BOOT:::browser
+     SYSLIB:::browser
+     IDB:::storage
+     OPFS:::storage
+     CACHE:::storage
+     SAB:::api
+     WORKERS:::api
+     CANVAS:::api
+     WEBGL:::api
+     WEBTRANSPORT:::api
+     AUDIOWORKLET:::api
+     WEBHID:::api
+     MEM0:::wasm
+     GCHEAP:::wasm
+     MEM1:::wasm
+     KERNEL:::wasm
+     SYSCALL:::wasm
+     SCHED:::wasm
+     SIGNAL:::wasm
+     VFS:::system
+     RAMFS:::system
+     PKGFS:::system
+     IDBFS:::system
+     MEMFS:::system
+     SOCKET:::system
+     DNS:::system
+     WM:::system
+     FOCUS:::system
+    classDef browser fill:#e1f5fe
+    classDef wasm fill:#fff3e0
+    classDef storage fill:#f3e5f5
+    classDef api fill:#e8f5e8
+    classDef system fill:#fff8e1
