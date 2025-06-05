@@ -1,10 +1,10 @@
-# Web VM
+# WebVM
 
 ## Architecture
 
 ![WebVM Architecture](./assets/webvm_arch.svg)
 
-**Web VM** を **POSIX 準拠の最小 UNIX 互換 OS** としてブラウザ上に実装するためのアプローチ:
+**WebVM** を **POSIX 準拠の最小 UNIX 互換 OS** としてブラウザ上に実装するためのアプローチ:
 
 > ChatGPT 君に文章を綺麗にしてもらったり情報ソースを調べてもらったりした。ありがとう...
 

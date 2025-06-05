@@ -1,3 +1,7 @@
+build/
+
 # misc
+node_modules/
 *.log
+.ninja_log
 .DS_Store
