@@ -1,0 +1,140 @@
+/**
+ * WebVM GUI スタイルシート
+ */
+
+/* ベーススタイル */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #1e1e1e;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  color: #d4d4d4;
+  overflow: hidden;
+}
+
+/* デスクトップ */
+#desktop {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+/* ウィンドウシステム */
+.window {
+  position: absolute;
+  background-color: #2d2d30;
+  border: 1px solid #464647;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.window-header {
+  background-color: #3c3c3c;
+  padding: 8px;
+  cursor: move;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+}
+
+.window-title {
+  color: #cccccc;
+  font-size: 14px;
+}
+
+.window-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.window-control {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.window-control:hover {
+  opacity: 0.8;
+}
+
+.close { 
+  background-color: #f44336; 
+}
+
+.minimize { 
+  background-color: #ffeb3b; 
+}
+
+.maximize { 
+  background-color: #4caf50; 
+}
+
+.window-content {
+  flex: 1;
+  overflow: auto;
+  padding: 0;
+}
+
+/* ターミナルスタイル */
+.terminal {
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  padding: 10px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.4;
+  height: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.terminal-output {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.terminal-input-line {
+  display: flex;
+  align-items: center;
+}
+
+.terminal-prompt {
+  color: #4ec9b0;
+  margin-right: 5px;
+}
+
+.terminal-input {
+  background: transparent;
+  border: none;
+  color: #d4d4d4;
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+  flex: 1;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 16px;
+  background-color: #d4d4d4;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .window {
+    width: calc(100vw - 20px) !important;
+    left: 10px !important;
+    right: 10px !important;
+  }
+}
