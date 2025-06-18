@@ -1,0 +1,15 @@
+rule CC
+  command = clang -O2 -nostdlib -target wasm32-unknown-unknown -fno-builtin -matomics -mbulk-memory -c $in -o $out
+rule LD
+  command = wasm-ld -z stack-size=1048576 --export=_start --allow-undefined --import-memory --shared-memory --max-memory=67108864 $in -o $out
+rule COPY
+  command = cp $in $out
+rule TSC
+  command = npx tsc --outDir build
+
+build build/kernel/hello.o: CC kernel/hello.c
+build build/kernel.wasm: LD build/kernel/hello.o
+build build/gui/index.html: COPY gui/index.html
+build build/syslib/index.js: TSC syslib/index.ts
+
+default build/kernel.wasm build/gui/index.html build/syslib/index.js
