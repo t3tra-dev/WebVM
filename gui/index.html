@@ -1,11 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
   <meta charset="utf-8" />
+  <title>WebVM - POSIX-compatible WebAssembly OS</title>
+  <link rel="stylesheet" href="gui/styles.css">
+</head>
+<body>
+  <div id="desktop">
+    <!-- ターミナルウィンドウ -->
+    <div class="window" id="terminal-window" style="top: 50px; left: 50px; width: 800px; height: 600px;">
+      <div class="window-header">
+        <div class="window-title">Terminal - WebVM</div>
+        <div class="window-controls">
+          <div class="window-control minimize"></div>
+          <div class="window-control maximize"></div>
+          <div class="window-control close"></div>
+        </div>
+      </div>
+      <div class="window-content">
+        <div class="terminal" id="terminal">
+          <div id="terminal-output" class="terminal-output"></div>
+          <div class="terminal-input-line">
+            <span class="terminal-prompt">$ </span>
+            <input type="text" id="terminal-input" class="terminal-input" autofocus />
+            <span class="terminal-cursor"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
-    import { boot } from "../syslib/index.js";
+    import { boot } from "./syslib/index.js";
+    import { initializeTerminal } from "./gui/terminal.js";
+    import { initializeWindowManager } from "./gui/window-manager.js";
+    
+    // 初期化
+    initializeTerminal();
+    initializeWindowManager();
+    
+    // カーネルを起動
     boot();
   </script>
-  <body>
-    <h1>Hello WebVM</h1>
-  </body>
+</body>
 </html>

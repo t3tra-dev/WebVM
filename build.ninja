@@ -1,15 +1,32 @@
 rule CC
   command = clang -O2 -nostdlib -target wasm32-unknown-unknown -fno-builtin -matomics -mbulk-memory -c $in -o $out
 rule LD
-  command = wasm-ld -z stack-size=1048576 --export=_start --allow-undefined --import-memory --shared-memory --max-memory=67108864 $in -o $out
+  command = wasm-ld -z stack-size=1048576 --export=_start --export=handle_command --allow-undefined --import-memory --shared-memory --max-memory=134217728 $in -o $out
 rule COPY
   command = cp $in $out
 rule TSC
   command = npx tsc --outDir build
 
-build build/kernel/hello.o: CC kernel/hello.c
-build build/kernel.wasm: LD build/kernel/hello.o
-build build/gui/index.html: COPY gui/index.html
+# カーネルオブジェクトファイル
+build build/kernel/init/main.o: CC kernel/init/main.c
+build build/kernel/mm/memory.o: CC kernel/mm/memory.c
+build build/kernel/fs/vfs.o: CC kernel/fs/vfs.c
+build build/kernel/drivers/console.o: CC kernel/drivers/console.c
+build build/kernel/drivers/drivers.o: CC kernel/drivers/drivers.c
+build build/kernel/lib/string.o: CC kernel/lib/string.c
+build build/kernel/lib/stdio.o: CC kernel/lib/stdio.c
+build build/kernel/lib/wasi_wrapper.o: CC kernel/lib/wasi_wrapper.c
+build build/kernel/shell/shell.o: CC kernel/shell/shell.c
+build build/kernel/shell/shell_api.o: CC kernel/shell/shell_api.c
+
+# カーネルリンク
+build build/kernel.wasm: LD build/kernel/init/main.o build/kernel/mm/memory.o build/kernel/fs/vfs.o build/kernel/drivers/console.o build/kernel/drivers/drivers.o build/kernel/lib/string.o build/kernel/lib/stdio.o build/kernel/lib/wasi_wrapper.o build/kernel/shell/shell.o build/kernel/shell/shell_api.o
+
+# GUI とシステムライブラリ
+build build/index.html: COPY gui/index.html
+build build/gui/styles.css: COPY gui/styles.css
+build build/gui/terminal.js: COPY gui/terminal.js
+build build/gui/window-manager.js: COPY gui/window-manager.js
 build build/syslib/index.js: TSC syslib/index.ts
 
-default build/kernel.wasm build/gui/index.html build/syslib/index.js
+default build/kernel.wasm build/index.html build/gui/styles.css build/gui/terminal.js build/gui/window-manager.js build/syslib/index.js
