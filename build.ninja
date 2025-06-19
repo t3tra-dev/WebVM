@@ -18,9 +18,14 @@ build build/kernel/lib/stdio.o: CC kernel/lib/stdio.c
 build build/kernel/lib/wasi_wrapper.o: CC kernel/lib/wasi_wrapper.c
 build build/kernel/shell/shell.o: CC kernel/shell/shell.c
 build build/kernel/shell/shell_api.o: CC kernel/shell/shell_api.c
+build build/kernel/process/process.o: CC kernel/process/process.c
+build build/kernel/process/scheduler.o: CC kernel/process/scheduler.c
+build build/kernel/process/spawn.o: CC kernel/process/spawn.c
+build build/kernel/ipc/ipc.o: CC kernel/ipc/ipc.c
+build build/kernel/ipc/pipe.o: CC kernel/ipc/pipe.c
 
 # カーネルリンク
-build build/kernel.wasm: LD build/kernel/init/main.o build/kernel/mm/memory.o build/kernel/fs/vfs.o build/kernel/drivers/console.o build/kernel/drivers/drivers.o build/kernel/lib/string.o build/kernel/lib/stdio.o build/kernel/lib/wasi_wrapper.o build/kernel/shell/shell.o build/kernel/shell/shell_api.o
+build build/kernel.wasm: LD build/kernel/init/main.o build/kernel/mm/memory.o build/kernel/fs/vfs.o build/kernel/drivers/console.o build/kernel/drivers/drivers.o build/kernel/lib/string.o build/kernel/lib/stdio.o build/kernel/lib/wasi_wrapper.o build/kernel/shell/shell.o build/kernel/shell/shell_api.o build/kernel/process/process.o build/kernel/process/scheduler.o build/kernel/process/spawn.o build/kernel/ipc/ipc.o build/kernel/ipc/pipe.o
 
 # GUI とシステムライブラリ
 build build/index.html: COPY gui/index.html

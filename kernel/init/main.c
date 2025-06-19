@@ -59,6 +59,24 @@ static int kernel_init(void) {
   }
   kputs("[INIT] Device drivers initialized");
 
+  /* プロセス管理の初期化 */
+  if (process_init() < 0) {
+    kfprintf(STDERR_FILENO, "[INIT] Failed to initialize process management\n");
+    return -1;
+  }
+  kputs("[INIT] Process management initialized");
+
+  /* スケジューラの初期化 */
+  scheduler_init();
+  kputs("[INIT] Scheduler initialized");
+
+  /* IPC初期化 */
+  if (ipc_init() < 0) {
+    kfprintf(STDERR_FILENO, "[INIT] Failed to initialize IPC\n");
+    return -1;
+  }
+  kputs("[INIT] IPC initialized");
+
   kernel_initialized = 1;
   kputs("[INIT] Kernel initialization complete");
 
@@ -74,11 +92,17 @@ static void kernel_main_loop(void) {
   /* ここでシェルまたは init プロセスを起動する */
   kputs("[KERNEL] Starting shell...");
 
-  /* シェルを起動 */
+  /* 
+   * シェルを起動
+   * 注意: 現在はWebAssemblyの制約により、シェルは
+   * カーネルコンテキストで実行される
+   */
   shell_main();
 
-  /* シェルが終了した場合 (通常は到達しない)  */
-  kputs("[KERNEL] Shell exited, halting system...");
+  /* 
+   * シェルは初期化後すぐに戻り、実際のコマンド処理は
+   * JavaScriptからのhandle_command呼び出しで行われる
+   */
 }
 
 /**
@@ -99,8 +123,10 @@ void kernel_main(void) {
   /* メインループ */
   kernel_main_loop();
 
-  kputs("[DEBUG] kernel_main() finished");
-  wasi_exit(0);
+  /* 
+   * WebAssemblyでは実際にはここに到達しない
+   * handle_commandがJavaScriptから呼ばれるのを待つ
+   */
 }
 
 /**

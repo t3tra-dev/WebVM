@@ -9,6 +9,9 @@
 int mm_init(void);      /* メモリ管理初期化 */
 int fs_init(void);      /* ファイルシステム初期化 */
 int drivers_init(void); /* デバイスドライバ初期化 */
+int process_init(void); /* プロセス管理初期化 */
+void scheduler_init(void); /* スケジューラ初期化 */
+int ipc_init(void);     /* IPC初期化 */
 
 /* 初期化順序定義 */
 #define INIT_LEVEL_EARLY    0
