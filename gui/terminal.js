@@ -3,27 +3,27 @@
  */
 
 // ターミナル要素
-const terminalOutput = document.getElementById('terminal-output');
-const terminalInput = document.getElementById('terminal-input');
+const terminalOutput = document.getElementById("terminal-output");
+const terminalInput = document.getElementById("terminal-input");
 
 /**
  * ターミナルAPIを初期化
  */
 export function initializeTerminal() {
   // ターミナル出力関数
-  window.terminalWrite = function(text) {
+  window.terminalWrite = function (text) {
     terminalOutput.textContent += text;
     terminalOutput.scrollTop = terminalOutput.scrollHeight;
   };
-  
-  window.terminalWriteLine = function(text) {
-    window.terminalWrite(text + '\n');
+
+  window.terminalWriteLine = function (text) {
+    window.terminalWrite(text + "\n");
   };
-  
-  window.terminalClear = function() {
-    terminalOutput.textContent = '';
+
+  window.terminalClear = function () {
+    terminalOutput.textContent = "";
   };
-  
+
   // 入力ハンドラを設定
   setupInputHandler();
 }
@@ -32,25 +32,25 @@ export function initializeTerminal() {
  * 入力ハンドラを設定
  */
 function setupInputHandler() {
-  terminalInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
+  terminalInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
       const command = terminalInput.value;
-      window.terminalWriteLine('$ ' + command);
-      
+      window.terminalWriteLine("$ " + command);
+
       // カーネルにコマンドを送信
       if (window.handleCommand) {
         window.handleCommand(command);
       }
-      
-      terminalInput.value = '';
+
+      terminalInput.value = "";
     }
   });
-  
+
   // 自動フォーカス
   terminalInput.focus();
-  
+
   // クリック時にフォーカス
-  document.getElementById('terminal').addEventListener('click', () => {
+  document.getElementById("terminal").addEventListener("click", () => {
     terminalInput.focus();
   });
 }

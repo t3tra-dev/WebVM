@@ -7,7 +7,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: #1e1e1e;
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
   color: #d4d4d4;
   overflow: hidden;
 }
@@ -61,16 +61,16 @@ body {
   opacity: 0.8;
 }
 
-.close { 
-  background-color: #f44336; 
+.close {
+  background-color: #f44336;
 }
 
-.minimize { 
-  background-color: #ffeb3b; 
+.minimize {
+  background-color: #ffeb3b;
 }
 
-.maximize { 
-  background-color: #4caf50; 
+.maximize {
+  background-color: #4caf50;
 }
 
 .window-content {
@@ -84,7 +84,7 @@ body {
   background-color: #1e1e1e;
   color: #d4d4d4;
   padding: 10px;
-  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-family: "Consolas", "Monaco", "Courier New", monospace;
   font-size: 14px;
   line-height: 1.4;
   height: 100%;
@@ -126,8 +126,14 @@ body {
 }
 
 @keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
 
 /* レスポンシブ対応 */

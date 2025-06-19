@@ -18,12 +18,12 @@ export async function loadKernel(memory: WebAssembly.Memory): Promise<WebAssembl
     env: { memory },
     wasi_snapshot_preview1: createWasiImports(memory),
   };
-  
+
   // カーネルWASMをフェッチ
   const res = await fetch("./kernel.wasm");
   const bytes = await res.arrayBuffer();
   const wasm = await WebAssembly.instantiate(bytes, importObj);
-  
+
   return wasm;
 }
 
@@ -32,7 +32,7 @@ export async function loadKernel(memory: WebAssembly.Memory): Promise<WebAssembl
  */
 export function setupCommandHandler(instance: WebAssembly.Instance, memory: WebAssembly.Memory) {
   const exports = instance.exports as unknown as KernelExports;
-  
+
   if (exports.handle_command) {
     globalThis.handleCommand = (command: string) => {
       // コマンド文字列をメモリに書き込む
@@ -41,7 +41,7 @@ export function setupCommandHandler(instance: WebAssembly.Instance, memory: WebA
       const cmdPtr = 0x10000; // 一時的なメモリ位置
       const u8 = new Uint8Array(memory.buffer);
       u8.set(cmdBytes, cmdPtr);
-      
+
       // handle_commandを呼び出す
       exports.handle_command!(cmdPtr);
     };

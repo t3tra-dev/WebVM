@@ -19,7 +19,7 @@ export async function boot() {
 
   // カーネルをロード
   const { instance, module } = await loadKernel(memory);
-  
+
   // グローバル変数に保存
   globalThis.wasm = {
     instance,
@@ -27,13 +27,13 @@ export async function boot() {
   };
 
   console.log("WebAssembly exports:", Object.keys(instance.exports));
-  
+
   // カーネルを起動
   const exports = instance.exports as any;
   const startFunction = exports._start as Function;
   startFunction();
   console.log("Kernel started successfully.");
-  
+
   // コマンドハンドラを設定
   setupCommandHandler(instance, memory);
 }

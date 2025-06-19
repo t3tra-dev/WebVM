@@ -106,6 +106,4 @@ void kernel_main(void) {
 /**
  * WASI環境用の _start エントリポイント
  */
-void _start(void) {
-  kernel_main();
-}
+void _start(void) { kernel_main(); }
