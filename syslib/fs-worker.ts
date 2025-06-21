@@ -24,7 +24,7 @@ import {
   FS_STATUS_PENDING,
   FS_STATUS_COMPLETED,
   FS_STATUS_ERROR
-} from './shared-constants';
+} from './shared-constants.js';
 
 // IndexedDBファイルシステム実装
 class IndexedDBFileSystem {

@@ -25,7 +25,7 @@ import {
   FS_STATUS_PENDING,
   FS_STATUS_COMPLETED,
   FS_STATUS_ERROR
-} from './shared-constants';
+} from './shared-constants.js';
 
 // グローバル変数
 let wasmModule: WebAssembly.Module | null = null;
