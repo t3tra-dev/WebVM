@@ -39,8 +39,11 @@ export async function initFileSystem(): Promise<void> {
     // FS通信用SharedArrayBuffer作成
     fsSharedBuffer = new SharedArrayBuffer(SHARED_BUFFER_SIZE);
     
-    // FS Worker作成・初期化
-    fsWorker = new Worker(new URL('./fs-worker.js', import.meta.url), { type: 'module' });
+    // FS Worker作成・初期化 (GitHub Pages パス対応)
+    const fsWorkerPath = (typeof window !== 'undefined' && window.location.pathname.includes('/WebVM/')) 
+      ? '/WebVM/syslib/fs-worker.js' 
+      : new URL('./fs-worker.js', import.meta.url);
+    fsWorker = new Worker(fsWorkerPath, { type: 'module' });
     await initializeWorker(fsWorker, 'FS Worker', { sharedBuffer: fsSharedBuffer });
     
     // kernel.wasmロード (GitHub Pages 対応)
@@ -48,8 +51,11 @@ export async function initFileSystem(): Promise<void> {
     const wasmResponse = await fetch(`${basePath}/kernel.wasm`);
     const wasmBytes = new Uint8Array(await wasmResponse.arrayBuffer());
     
-    // Wasm Worker作成・初期化
-    wasmWorker = new Worker(new URL('./wasm-worker.js', import.meta.url), { type: 'module' });
+    // Wasm Worker作成・初期化 (GitHub Pages パス対応)
+    const wasmWorkerPath = (typeof window !== 'undefined' && window.location.pathname.includes('/WebVM/'))
+      ? '/WebVM/syslib/wasm-worker.js'
+      : new URL('./wasm-worker.js', import.meta.url);
+    wasmWorker = new Worker(wasmWorkerPath, { type: 'module' });
     
     // ワーカー初期化前にターミナル通信設定
     setupTerminalCommunication();
