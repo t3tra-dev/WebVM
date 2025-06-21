@@ -13,9 +13,9 @@ void kfree(void *ptr);
 
 /* メモリ統計構造体 */
 struct mm_stats {
-    size_t total_memory;
-    size_t used_memory;
-    size_t free_memory;
+  size_t total_memory;
+  size_t used_memory;
+  size_t free_memory;
 };
 
 /* メモリ統計取得 */

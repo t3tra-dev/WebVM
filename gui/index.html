@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <title>WebVM - POSIX-compatible WebAssembly OS</title>
-    <link rel="stylesheet" href="gui/styles.css" />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <script src="coi-serviceworker.min.js"></script>
     <div id="desktop">
       <!-- ターミナルウィンドウ -->
       <div
@@ -40,16 +41,22 @@
     </div>
 
     <script type="module">
-      import { boot } from "./syslib/index.js";
-      import { initializeTerminal } from "./gui/terminal.js";
-      import { initializeWindowManager } from "./gui/window-manager.js";
+      import { boot } from "../build/syslib/index.js";
+      import { initializeTerminal } from "./terminal.js";
+      import { initializeWindowManager } from "./window-manager.js";
 
-      // 初期化
-      initializeTerminal();
+      // ウィンドウマネージャーを初期化
       initializeWindowManager();
 
-      // カーネルを起動
-      boot();
+      // カーネルを起動してから ターミナルを初期化
+      boot().then(() => {
+        initializeTerminal();
+        
+        // ターミナル準備完了を通知
+        if (globalThis.setTerminalReady) {
+          globalThis.setTerminalReady();
+        }
+      });
     </script>
   </body>
 </html>

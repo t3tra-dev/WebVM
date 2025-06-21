@@ -54,7 +54,7 @@ static void itoa_internal(int value, char *str, int base) {
   /* 負の符号を追加 */
   if (is_negative)
     *ptr++ = '-';
-  
+
   *ptr-- = '\0';
 
   /* 文字列を反転 */
@@ -92,28 +92,28 @@ int kprintf(const char *format, ...) {
   int i = 0;
   va_list args;
   int total_written = 0;
-  
+
   va_start(args, format);
 
   /* 簡易的な実装 - %s, %d, %x, %-Nd のみサポート */
   while (format[i] && buf_idx < sizeof(buffer) - 1) {
     if (format[i] == '%' && format[i + 1]) {
       i++;
-      
+
       /* フィールド幅を解析 */
       int field_width = 0;
       int left_align = 0;
-      
+
       if (format[i] == '-') {
         left_align = 1;
         i++;
       }
-      
+
       while (format[i] >= '0' && format[i] <= '9') {
         field_width = field_width * 10 + (format[i] - '0');
         i++;
       }
-      
+
       switch (format[i]) {
       case 's': {
         /* 文字列は直接出力 */
@@ -123,9 +123,10 @@ int kprintf(const char *format, ...) {
           buf_idx = 0;
         }
         const char *str = va_arg(args, const char *);
-        if (str == NULL) str = "(null)";
+        if (str == NULL)
+          str = "(null)";
         int str_len = strlen_internal(str);
-        
+
         /* フィールド幅の処理 */
         if (field_width > str_len && !left_align) {
           for (int j = 0; j < field_width - str_len; j++) {
@@ -133,10 +134,10 @@ int kprintf(const char *format, ...) {
             total_written++;
           }
         }
-        
+
         wasi_write(STDOUT_FILENO, str, str_len);
         total_written += str_len;
-        
+
         if (field_width > str_len && left_align) {
           for (int j = 0; j < field_width - str_len; j++) {
             wasi_write(STDOUT_FILENO, " ", 1);
@@ -151,7 +152,7 @@ int kprintf(const char *format, ...) {
         int num = va_arg(args, int);
         itoa_internal(num, num_buf, 10);
         int num_len = strlen_internal(num_buf);
-        
+
         /* フィールド幅の処理 */
         if (field_width > num_len && !left_align) {
           for (int j = 0; j < field_width - num_len; j++) {
@@ -160,11 +161,11 @@ int kprintf(const char *format, ...) {
             }
           }
         }
-        
+
         for (int j = 0; j < num_len && buf_idx < sizeof(buffer) - 1; j++) {
           buffer[buf_idx++] = num_buf[j];
         }
-        
+
         if (field_width > num_len && left_align) {
           for (int j = 0; j < field_width - num_len; j++) {
             if (buf_idx < sizeof(buffer) - 1) {
@@ -205,7 +206,7 @@ int kprintf(const char *format, ...) {
     wasi_write(STDOUT_FILENO, buffer, buf_idx);
     total_written += buf_idx;
   }
-  
+
   va_end(args);
   return total_written;
 }
@@ -219,7 +220,7 @@ int kfprintf(int fd, const char *format, ...) {
   int i = 0;
   va_list args;
   int total_written = 0;
-  
+
   va_start(args, format);
 
   /* kprintfと同じ実装だが、出力先がfd */
@@ -234,7 +235,8 @@ int kfprintf(int fd, const char *format, ...) {
           buf_idx = 0;
         }
         const char *str = va_arg(args, const char *);
-        if (str == NULL) str = "(null)";
+        if (str == NULL)
+          str = "(null)";
         int str_len = strlen_internal(str);
         wasi_write(fd, str, str_len);
         total_written += str_len;
@@ -270,7 +272,7 @@ int kfprintf(int fd, const char *format, ...) {
     wasi_write(fd, buffer, buf_idx);
     total_written += buf_idx;
   }
-  
+
   va_end(args);
   return total_written;
 }

@@ -6,25 +6,25 @@
 #define __WEBVM_INIT_H__
 
 /* 各サブシステムの初期化関数 */
-int mm_init(void);      /* メモリ管理初期化 */
-int fs_init(void);      /* ファイルシステム初期化 */
-int drivers_init(void); /* デバイスドライバ初期化 */
-int process_init(void); /* プロセス管理初期化 */
+int mm_init(void);         /* メモリ管理初期化 */
+int fs_init(void);         /* ファイルシステム初期化 */
+int drivers_init(void);    /* デバイスドライバ初期化 */
+int process_init(void);    /* プロセス管理初期化 */
 void scheduler_init(void); /* スケジューラ初期化 */
-int ipc_init(void);     /* IPC初期化 */
+int ipc_init(void);        /* IPC初期化 */
 
 /* 初期化順序定義 */
-#define INIT_LEVEL_EARLY    0
-#define INIT_LEVEL_CORE     1
-#define INIT_LEVEL_DRIVERS  2
-#define INIT_LEVEL_FS       3
-#define INIT_LEVEL_LATE     4
+#define INIT_LEVEL_EARLY 0
+#define INIT_LEVEL_CORE 1
+#define INIT_LEVEL_DRIVERS 2
+#define INIT_LEVEL_FS 3
+#define INIT_LEVEL_LATE 4
 
 /* 初期化エントリ構造体 */
 struct init_entry {
-    const char *name;
-    int (*init_func)(void);
-    int level;
+  const char *name;
+  int (*init_func)(void);
+  int level;
 };
 
 /* 初期化マクロ */

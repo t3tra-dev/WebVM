@@ -92,14 +92,14 @@ static void kernel_main_loop(void) {
   /* ここでシェルまたは init プロセスを起動する */
   kputs("[KERNEL] Starting shell...");
 
-  /* 
+  /*
    * シェルを起動
    * 注意: 現在はWebAssemblyの制約により、シェルは
    * カーネルコンテキストで実行される
    */
   shell_main();
 
-  /* 
+  /*
    * シェルは初期化後すぐに戻り、実際のコマンド処理は
    * JavaScriptからのhandle_command呼び出しで行われる
    */
@@ -123,7 +123,7 @@ void kernel_main(void) {
   /* メインループ */
   kernel_main_loop();
 
-  /* 
+  /*
    * WebAssemblyでは実際にはここに到達しない
    * handle_commandがJavaScriptから呼ばれるのを待つ
    */
