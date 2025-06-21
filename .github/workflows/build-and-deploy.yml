@@ -55,6 +55,15 @@ jobs:
         run: |
           make
 
+      - name: Prepare GitHub Pages deployment
+        run: |
+          cp gui/index.html build/
+          cp gui/styles.css build/
+          cp gui/terminal.js build/
+          cp gui/window-manager.js build/
+          cp gui/coi-serviceworker.min.js build/
+          cp gui/main.js build/
+          
       - name: Setup GitHub Pages
         if: github.ref == 'refs/heads/main'
         uses: actions/configure-pages@v4
