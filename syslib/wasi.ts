@@ -43,8 +43,9 @@ export async function initFileSystem(): Promise<void> {
     fsWorker = new Worker(new URL('./fs-worker.js', import.meta.url), { type: 'module' });
     await initializeWorker(fsWorker, 'FS Worker', { sharedBuffer: fsSharedBuffer });
     
-    // kernel.wasmロード
-    const wasmResponse = await fetch('/kernel.wasm');
+    // kernel.wasmロード (GitHub Pages 対応)
+    const basePath = (typeof window !== 'undefined' && window.location.pathname.includes('/WebVM/')) ? '/WebVM' : '';
+    const wasmResponse = await fetch(`${basePath}/kernel.wasm`);
     const wasmBytes = new Uint8Array(await wasmResponse.arrayBuffer());
     
     // Wasm Worker作成・初期化

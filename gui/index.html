@@ -3,10 +3,23 @@
   <head>
     <meta charset="utf-8" />
     <title>WebVM - POSIX-compatible WebAssembly OS</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <script src="coi-serviceworker.min.js"></script>
+    <script>
+      // GitHub Pages でのパス調整
+      if (window.location.pathname.includes('/WebVM/')) {
+        // GitHub Pages: 絶対パス
+        const script = document.createElement('script');
+        script.src = '/WebVM/coi-serviceworker.min.js';
+        document.head.appendChild(script);
+      } else {
+        // ローカル開発: 相対パス
+        const script = document.createElement('script');
+        script.src = './coi-serviceworker.min.js';
+        document.head.appendChild(script);
+      }
+    </script>
     <div id="desktop">
       <!-- ターミナルウィンドウ -->
       <div
@@ -41,9 +54,39 @@
     </div>
 
     <script type="module">
-      import { boot } from "../build/syslib/index.js";
-      import { initializeTerminal } from "./terminal.js";
-      import { initializeWindowManager } from "./window-manager.js";
+      // 実行時パス判定による動的モジュール読み込み
+      async function loadModules() {
+        const isGitHubPages = window.location.pathname.includes('/WebVM/');
+        
+        if (isGitHubPages) {
+          // GitHub Pages: 実行時動的インポート
+          const [bootModule, terminalModule, windowModule] = await Promise.all([
+            eval('import("/WebVM/build/syslib/index.js")'),
+            eval('import("/WebVM/terminal.js")'),
+            eval('import("/WebVM/window-manager.js")')
+          ]);
+          return {
+            boot: bootModule.boot,
+            initializeTerminal: terminalModule.initializeTerminal,
+            initializeWindowManager: windowModule.initializeWindowManager
+          };
+        } else {
+          // ローカル開発: 静的インポート
+          const [bootModule, terminalModule, windowModule] = await Promise.all([
+            import('../build/syslib/index.js'),
+            import('./terminal.js'),
+            import('./window-manager.js')
+          ]);
+          return {
+            boot: bootModule.boot,
+            initializeTerminal: terminalModule.initializeTerminal,
+            initializeWindowManager: windowModule.initializeWindowManager
+          };
+        }
+      }
+
+      // モジュール読み込みと初期化
+      const { boot, initializeTerminal, initializeWindowManager } = await loadModules();
 
       // ウィンドウマネージャーを初期化
       initializeWindowManager();

@@ -62,6 +62,7 @@ export default defineConfig({
       external: [],
     },
   },
+  base: process.env.NODE_ENV === 'production' ? '/WebVM/' : '/',
   worker: {
     format: 'es',
   },
