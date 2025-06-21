@@ -1,4 +1,5 @@
 build/
+certs/
 
 # misc
 node_modules/
