@@ -63,7 +63,13 @@ jobs:
           cp gui/window-manager.js build/
           cp gui/coi-serviceworker.min.js build/
           cp gui/main.js build/
-          
+
+          echo "Build directory structure:"
+          find build/ -type f -name "*.js" | head -10
+
+          echo "Syslib directory structure:"
+          ls -la build/syslib/
+
       - name: Setup GitHub Pages
         if: github.ref == 'refs/heads/main'
         uses: actions/configure-pages@v4
