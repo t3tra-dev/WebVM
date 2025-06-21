@@ -61,7 +61,7 @@
         if (isGitHubPages) {
           // GitHub Pages: 実行時動的インポート
           const [bootModule, terminalModule, windowModule] = await Promise.all([
-            eval('import("/WebVM/build/syslib/index.js")'),
+            eval('import("/WebVM/syslib/index.js")'),
             eval('import("/WebVM/terminal.js")'),
             eval('import("/WebVM/window-manager.js")')
           ]);
