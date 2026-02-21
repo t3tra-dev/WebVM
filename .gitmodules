@@ -1,3 +1,6 @@
 [submodule "third_party/wasi-libc"]
 	path = third_party/wasi-libc
 	url = https://github.com/WebAssembly/wasi-libc.git
+[submodule "third_party/coreutils"]
+	path = third_party/coreutils
+	url = https://git.savannah.gnu.org/git/coreutils.git
